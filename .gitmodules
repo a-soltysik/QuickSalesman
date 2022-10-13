@@ -1,0 +1,3 @@
+[submodule "ext/TspReader"]
+	path = ext/TspReader
+	url = git@github.com:a-soltysik/TspReader.git
