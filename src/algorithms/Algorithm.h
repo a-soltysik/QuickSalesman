@@ -25,5 +25,8 @@ public:
     virtual auto calculate(const tsplib::Graph& graph) -> std::optional<Result> = 0;
 };
 
+[[nodiscard]]
+auto getPathLength(const std::vector<tsplib::Graph::Vertex>& path, const tsplib::Graph& graph) -> int64_t;
+
 }
 
