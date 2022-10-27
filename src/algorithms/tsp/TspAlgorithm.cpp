@@ -1,6 +1,6 @@
-#include "Algorithm.h"
+#include "TspAlgorithm.h"
 
-namespace tsp
+namespace tsp::algo::tsp
 {
 
 auto getPathLength(const std::vector<tsplib::Graph::Vertex>& path, const tsplib::Graph& graph) -> int64_t

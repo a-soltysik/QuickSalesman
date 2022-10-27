@@ -1,6 +1,6 @@
 #include "BruteForce.h"
 
-namespace tsp
+namespace qs::algo::tsp
 {
 
 auto BruteForce::calculate(const tsplib::Graph& graph) -> std::optional<Result>
@@ -17,6 +17,8 @@ auto BruteForce::calculate(const tsplib::Graph& graph) -> std::optional<Result>
         .length = std::numeric_limits<decltype(Result::length)>::max()
     };
 
+    const auto first = std::next(vertices.begin());
+    const auto last = std::prev(std::prev(vertices.end()));
     do
     {
         const auto length = getPathLength(vertices, graph);
@@ -28,8 +30,7 @@ auto BruteForce::calculate(const tsplib::Graph& graph) -> std::optional<Result>
         }
 
     }
-    while (std::next_permutation(std::next(vertices.begin()),
-                                 std::prev(vertices.end())));
+    while (std::next_permutation(first, last));
 
     return result;
 }

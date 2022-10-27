@@ -1,11 +1,11 @@
 #pragma once
 
-#include "Algorithm.h"
+#include "TspAlgorithm.h"
 
-namespace tsp
+namespace qs::algo::tsp
 {
 
-class BruteForce : Algorithm
+class BruteForce : public TspAlgorithm
 {
 public:
     [[nodiscard]]
