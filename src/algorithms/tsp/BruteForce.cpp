@@ -1,4 +1,5 @@
 #include "BruteForce.h"
+#include "utils/Utils.h"
 
 namespace qs::algo::tsp
 {
@@ -14,19 +15,19 @@ auto BruteForce::calculate(const tsplib::Graph& graph) -> std::optional<Result>
 
     auto result = Result {
         .path = {},
-        .length = std::numeric_limits<decltype(Result::length)>::max()
+        .distance = std::numeric_limits<Result::Distance>::max()
     };
 
     const auto first = std::next(vertices.begin());
-    const auto last = std::prev(std::prev(vertices.end()));
+    const auto last = std::prev(vertices.end());
     do
     {
-        const auto length = getPathLength(vertices, graph);
+        const auto distance = getPathLength(vertices, graph);
 
-        if (length < result.length)
+        if (distance < result.distance)
         {
-            result.length = length;
-            result.path   = vertices;
+            result.distance = distance;
+            result.path     = vertices;
         }
 
     }
