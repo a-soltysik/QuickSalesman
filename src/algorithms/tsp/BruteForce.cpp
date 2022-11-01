@@ -1,5 +1,5 @@
 #include "BruteForce.h"
-#include "utils/Utils.h"
+#include "algorithms/tsp/utils/PathMask.h"
 
 namespace qs::algo::tsp
 {

@@ -1,9 +1,6 @@
 #include "DynamicProgramming.h"
+#include "utils/CombinationsGenerator.h"
 
-#include <iostream>
-
-#include <span>
-#include <limits>
 #include <algorithm>
 
 namespace qs::algo::tsp
@@ -16,117 +13,146 @@ auto DynamicProgramming::calculate(const tsplib::Graph& graph) -> std::optional<
         return {};
     }
 
-    auto vertices = graph.getVertices();
-
     currentGraph = &graph;
-    start = vertices.front();
-    cost = makeCostTable();
+    costs        = makeCostTable();
 
-    auto length = calculate(utils::PathMask{}.visit(start), start);
-    auto path = getPath();
+    return calculate();
+}
 
-    for (const auto& e : cost)
+auto DynamicProgramming::calculate() -> Result
+{
+    for (auto subsetSize = size_t {2}; subsetSize < currentGraph->getOrder(); subsetSize++)
     {
-        qs::utils::print(e);
+        auto combinations = utils::CombinationsGenerator {currentGraph->getOrder() - 1, subsetSize};
+        while (combinations.hasNext())
+        {
+            fillCostsForPath(combinationToPath(combinations.getNext()));
+        }
     }
 
-    return Result{
-        .path = std::move(path),
-        .distance = length,
+    const auto path = getMinimalFinalPath();
+
+    return Result {
+        .path = backtracePath(path.predecessor),
+        .distance = path.cost,
     };
 }
 
-auto DynamicProgramming::calculate(utils::PathMask mask, tsplib::Graph::Vertex begin) -> Result::Distance
+auto DynamicProgramming::backtracePath(tsplib::Graph::Vertex predecessor) -> Result::Path
 {
-    if (mask == utils::allVisited(currentGraph->getOrder()))
-    {
-        return (*currentGraph).getWeightUnchecked({start, begin});
-    }
-    if (cost[begin][mask.value()] != tsplib::Graph::INFINITY_WEIGHT)
-    {
-        return cost[begin][mask.value()];
-    }
+    auto result = backtracePathWithoutEnds(predecessor);
 
-    const auto result = getResultForMask(mask, begin);
-    cost[begin][mask.value()] = result;
-    return result;
-}
-
-auto DynamicProgramming::getResultForMask(utils::PathMask mask, tsplib::Graph::Vertex begin) -> Result::Distance
-{
-    auto result = Result::Distance {tsplib::Graph::INFINITY_WEIGHT};
-
-    for (auto i = tsplib::Graph::Vertex{}; i < currentGraph->getOrder(); i++)
-    {
-        if (!mask.isVisited(i))
-        {
-            auto subResult = currentGraph->getWeightUnchecked({i, begin}) + calculate(mask.visit(i), i);
-            result = std::min(result, subResult);
-        }
-    }
+    result.push_back(0);
+    result.insert(result.begin(), 0);
 
     return result;
 }
 
-auto DynamicProgramming::getPath() -> Result::Path
+auto DynamicProgramming::makeCostTable() -> std::vector<std::vector<Cost>>
 {
-    auto result = Result::Path {};
-    auto mask = utils::allVisited(currentGraph->getOrder());
-    result.reserve(currentGraph->getOrder() + 1);
+    auto result = std::vector(getNumberOfSubsets(currentGraph->getOrder()),
+                              std::vector(currentGraph->getOrder(),
+                                          Cost {Result::Distance {tsplib::Graph::INFINITY_WEIGHT}, {}}));
 
-    auto lastIndex = start;
-    result.push_back(start);
-    for (auto i = tsplib::Graph::Vertex{}; i < currentGraph->getOrder(); i++)
+    for (auto i = tsplib::Graph::Vertex {1}; i < currentGraph->getOrder(); i++)
     {
-        if (i == start)
-        {
-            continue;
-        }
-        auto index = tsplib::Graph::Vertex{};
-        for (auto j = tsplib::Graph::Vertex{}; j < currentGraph->getOrder(); j++)
-        {
-            if (!mask.isVisited(j))
-            {
-                continue;
-            }
-            const auto prevDist = cost[index][mask.value()] + currentGraph->getWeightUnchecked({index, lastIndex});
-            const auto newDist = cost[j][mask.value()] + currentGraph->getWeightUnchecked({j, lastIndex});
-            if (newDist < prevDist)
-            {
-                index = j;
-            }
-        }
-        result.push_back(index);
-        mask = mask.unvisit(index);
-        lastIndex = index;
+        const auto mask = utils::PathMask {}.visit(i).value();
+        result[mask][i].cost = currentGraph->getWeightUnchecked({0, i});
     }
-    result.push_back(start);
-    std::ranges::reverse(result);
-
     return result;
-}
-
-auto DynamicProgramming::subsetToMask(std::span<tsplib::Graph::Vertex> subset) -> utils::PathMask
-{
-    auto result = utils::PathMask{};
-    for (auto vertex : subset)
-    {
-        result = result.visit(vertex);
-    }
-
-    return {result};
-}
-
-auto DynamicProgramming::makeCostTable() -> std::vector<std::vector<Result::Distance>>
-{
-    return {getNumberOfSubsets(currentGraph->getOrder()),
-                               std::vector(currentGraph->getOrder(),
-                                           Result::Distance {tsplib::Graph::INFINITY_WEIGHT})};
 }
 
 auto DynamicProgramming::getNumberOfSubsets(uint64_t numberOfVertices) -> uint64_t
 {
     return 1 << numberOfVertices;
+}
+
+auto DynamicProgramming::combinationToPath(utils::PathMask combination) -> utils::PathMask
+{
+    return {combination.value() << 1};
+}
+
+auto DynamicProgramming::findMinimalPathFor(utils::PathMask mask, tsplib::Graph::Vertex end) -> DynamicProgramming::Cost
+{
+    auto minDistance    = std::numeric_limits<Result::Distance>::max();
+    auto minPredecessor = START_POINT;
+
+    for (auto k = START_POINT + 1; k < currentGraph->getOrder(); k++)
+    {
+        if (end == k)
+        {
+            continue;
+        }
+
+        const auto currentCost = costs[mask.unvisit(end).value()][k];
+
+        if (currentCost.cost != tsplib::Graph::INFINITY_WEIGHT)
+        {
+            auto currentDistance = currentCost.cost + currentGraph->getWeightUnchecked({k, end});
+            if (currentDistance < minDistance)
+            {
+                minDistance    = currentDistance;
+                minPredecessor = k;
+            }
+        }
+    }
+
+    return {minDistance, minPredecessor};
+}
+
+auto DynamicProgramming::fillCostsForPath(utils::PathMask mask) -> void
+{
+    for (auto j = START_POINT + 1; j < currentGraph->getOrder(); j++)
+    {
+        if (!mask.isVisited(j))
+        {
+            continue;
+        }
+
+        costs[mask.value()][j] = findMinimalPathFor(mask, j);
+    }
+}
+
+auto DynamicProgramming::getMinimalFinalPath() -> Cost
+{
+    auto mask = utils::allVisited(currentGraph->getOrder()).unvisit(START_POINT);
+
+    auto cost        = std::numeric_limits<Result::Distance>::max();
+    auto predecessor = START_POINT;
+
+    for (auto i = tsplib::Graph::Vertex {1}; i < currentGraph->getOrder(); i++)
+    {
+        auto currentDistance = costs[mask.value()][i].cost + currentGraph->getWeightUnchecked({i, START_POINT});
+        if (cost > currentDistance)
+        {
+            cost        = currentDistance;
+            predecessor = i;
+        }
+    }
+
+    return {.cost = cost,
+            .predecessor = predecessor,
+    };
+}
+
+auto DynamicProgramming::backtracePathWithoutEnds(tsplib::Graph::Vertex predecessor) -> Result::Path
+{
+    auto result = Result::Path {};
+    result.reserve(currentGraph->getOrder() + 1);
+
+    auto mask = utils::allVisited(currentGraph->getOrder()).unvisit(0);
+
+    for (auto i = size_t {}; i < currentGraph->getOrder() - 1; i++)
+    {
+        result.push_back(predecessor);
+        const auto newPredecessor = costs[mask.value()][predecessor].predecessor;
+        mask        = mask.unvisit(predecessor);
+        predecessor = newPredecessor;
+    }
+
+    std::ranges::reverse(result);
+
+    return result;
 }
 
 }

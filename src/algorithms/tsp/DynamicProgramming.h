@@ -1,8 +1,7 @@
 #pragma once
 
 #include "TspAlgorithm.h"
-#include "Utils.h"
-#include <span>
+#include "utils/PathMask.h"
 
 namespace qs::algo::tsp
 {
@@ -12,18 +11,44 @@ class DynamicProgramming : public TspAlgorithm
 public:
     [[nodiscard]]
     auto calculate(const tsplib::Graph& graph) -> std::optional<Result> override;
+
 private:
+    struct Cost
+    {
+        Result::Distance cost;
+        tsplib::Graph::Vertex predecessor;
+    };
+
     [[nodiscard]]
-    auto calculate(utils::PathMask mask, tsplib::Graph::Vertex begin) -> Result::Distance;
-    auto getResultForMask(utils::PathMask mask, tsplib::Graph::Vertex begin) -> Result::Distance;
-    auto getPath() -> Result::Path;
-    static auto subsetToMask(std::span<tsplib::Graph::Vertex> subset) -> utils::PathMask;
-    auto makeCostTable() -> std::vector<std::vector<Result::Distance>>;
+    auto calculate() -> Result;
+
+    [[nodiscard]]
+    auto backtracePath(tsplib::Graph::Vertex predecessor) -> Result::Path;
+
+    [[nodiscard]]
+    auto backtracePathWithoutEnds(tsplib::Graph::Vertex predecessor) -> Result::Path;
+
+    [[nodiscard]]
+    auto findMinimalPathFor(utils::PathMask mask, tsplib::Graph::Vertex end) -> Cost;
+
+    auto fillCostsForPath(utils::PathMask mask) -> void;
+
+    [[nodiscard]]
+    auto getMinimalFinalPath() -> Cost;
+
+    [[nodiscard]]
+    auto makeCostTable() -> std::vector<std::vector<Cost>>;
+
+    [[nodiscard]]
     static auto getNumberOfSubsets(uint64_t numberOfVertices) -> uint64_t;
 
-    std::vector<std::vector<Result::Distance>> cost;
+    [[nodiscard]]
+    static auto combinationToPath(utils::PathMask combination) -> utils::PathMask;
+
+    static constexpr auto START_POINT = tsplib::Graph::Vertex{0};
+
+    std::vector<std::vector<Cost>> costs;
     const tsplib::Graph* currentGraph;
-    tsplib::Graph::Vertex start;
 };
 
 }

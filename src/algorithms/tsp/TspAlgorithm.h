@@ -1,7 +1,7 @@
 #pragma once
 
 #include "algorithms/Algorithm.h"
-#include "utils/Utils.h"
+#include "algorithms/tsp/utils/PathMask.h"
 #include <span>
 
 namespace qs::algo::tsp
@@ -22,16 +22,6 @@ class TspAlgorithm : public Algorithm<Result>
 };
 
 [[nodiscard]]
-inline auto getPathLength(std::span<tsplib::Graph::Vertex> path, const tsplib::Graph& graph) -> Result::Distance
-{
-    auto length = Result::Distance {};
-
-    for (auto i = size_t {1}; i < path.size(); i++)
-    {
-        length += graph.getWeightUnchecked({path[i  - 1], path[i]});
-    }
-
-    return length;
-}
+auto getPathLength(std::span<tsplib::Graph::Vertex> path, const tsplib::Graph& graph) -> Result::Distance;
 
 }

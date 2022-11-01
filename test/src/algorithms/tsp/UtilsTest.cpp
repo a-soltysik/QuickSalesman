@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include <cmath>
 
-#include "algorithms/tsp/Utils.h"
+#include "algorithms/tsp/utils/PathMask.h"
 
 TEST(UtilsTest, PathMaskValue)
 {
