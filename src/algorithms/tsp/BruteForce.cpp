@@ -6,11 +6,12 @@ namespace qs::algo::tsp
 
 auto BruteForce::calculate(const tsplib::Graph& graph) -> std::optional<Result>
 {
-    auto vertices = graph.getVertices();
-    if (vertices.size() < 2)
+    if (!graph.isComplete())
     {
         return {};
     }
+
+    auto vertices = graph.getVertices();
     vertices.push_back(vertices.front());
 
     auto result = Result {

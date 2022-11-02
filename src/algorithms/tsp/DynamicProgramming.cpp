@@ -8,6 +8,11 @@ namespace qs::algo::tsp
 
 auto DynamicProgramming::calculate(const tsplib::Graph& graph) -> std::optional<Result>
 {
+    if (!graph.isComplete())
+    {
+        return {};
+    }
+    
     if (graph.getOrder() >= std::numeric_limits<uint64_t>::digits)
     {
         return {};

@@ -11,7 +11,7 @@ BranchAndBound::BranchAndBound(const StrategyFunction& strategy)
 
 auto BranchAndBound::calculate(const tsplib::Graph& graph) -> std::optional<Result>
 {
-    if (graph.getOrder() == 0)
+    if (!graph.isComplete())
     {
         return {};
     }
