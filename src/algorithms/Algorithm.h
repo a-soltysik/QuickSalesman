@@ -5,7 +5,7 @@
 namespace qs::algo
 {
 
-template<typename T>
+template<typename Result, typename ...Args>
 class Algorithm
 {
 public:
@@ -17,7 +17,7 @@ public:
 
     virtual ~Algorithm() noexcept = default;
 
-    virtual auto calculate(const tsplib::Graph& graph) -> std::optional<T> = 0;
+    virtual auto solve(const Args&... args) -> std::optional<Result> = 0;
 };
 
 }

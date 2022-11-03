@@ -65,22 +65,22 @@ int main()
     //qs::utils::print(graph.toString());
 
 
-    auto result1 = qs::algo::tsp::BruteForce{}.calculate(graph);
+    auto result1 = qs::algo::tsp::BruteForce {}.solve(graph);
     qs::utils::print(result1.value().distance);
     qs::utils::print(result1.value().path);
     qs::utils::print(qs::algo::tsp::getPathLength(result1.value().path, graph));
 
-    auto result2 = qs::algo::tsp::DynamicProgramming{}.calculate(graph);
+    auto result2 = qs::algo::tsp::DynamicProgramming {}.solve(graph);
     qs::utils::print(result2.value().distance);
     qs::utils::print(result2.value().path);
     qs::utils::print(qs::algo::tsp::getPathLength(result2.value().path, graph));
 
-    auto result3 = qs::algo::tsp::BranchAndBound{[](const auto& node1, const auto& node2) {
+    auto result3 = qs::algo::tsp::BranchAndBound {[](const auto& node1, const auto& node2) {
         auto result1 = node1.cost * static_cast<int32_t>(node1.level);
         auto result2 = node2.cost * static_cast<int32_t>(node2.level);
 
         return result1 > result2;
-    }}.calculate(graph);
+    }}.solve(graph);
     qs::utils::print(result3.value().distance);
     qs::utils::print(result3.value().path);
     qs::utils::print(qs::algo::tsp::getPathLength(result3.value().path, graph));

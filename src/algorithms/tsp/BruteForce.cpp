@@ -4,7 +4,7 @@
 namespace qs::algo::tsp
 {
 
-auto BruteForce::calculate(const tsplib::Graph& graph) -> std::optional<Result>
+auto BruteForce::solve(const tsplib::Graph& graph) -> std::optional<Result>
 {
     if (!graph.isComplete())
     {

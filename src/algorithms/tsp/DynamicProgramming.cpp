@@ -6,13 +6,13 @@
 namespace qs::algo::tsp
 {
 
-auto DynamicProgramming::calculate(const tsplib::Graph& graph) -> std::optional<Result>
+auto DynamicProgramming::solve(const tsplib::Graph& graph) -> std::optional<Result>
 {
     if (!graph.isComplete())
     {
         return {};
     }
-    
+
     if (graph.getOrder() >= std::numeric_limits<uint64_t>::digits)
     {
         return {};
@@ -21,10 +21,10 @@ auto DynamicProgramming::calculate(const tsplib::Graph& graph) -> std::optional<
     currentGraph = &graph;
     costs        = makeCostTable();
 
-    return calculate();
+    return solve();
 }
 
-auto DynamicProgramming::calculate() -> Result
+auto DynamicProgramming::solve() -> Result
 {
     for (auto subsetSize = size_t {2}; subsetSize < currentGraph->getOrder(); subsetSize++)
     {

@@ -10,7 +10,7 @@ class DynamicProgramming : public TspAlgorithm
 {
 public:
     [[nodiscard]]
-    auto calculate(const tsplib::Graph& graph) -> std::optional<Result> override;
+    auto solve(const tsplib::Graph& graph) -> std::optional<Result> override;
 
 private:
     struct Cost
@@ -20,7 +20,7 @@ private:
     };
 
     [[nodiscard]]
-    auto calculate() -> Result;
+    auto solve() -> Result;
 
     [[nodiscard]]
     auto backtracePath(tsplib::Graph::Vertex predecessor) -> Result::Path;

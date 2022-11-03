@@ -9,7 +9,7 @@ BranchAndBound::BranchAndBound(const StrategyFunction& strategy)
 
 }
 
-auto BranchAndBound::calculate(const tsplib::Graph& graph) -> std::optional<Result>
+auto BranchAndBound::solve(const tsplib::Graph& graph) -> std::optional<Result>
 {
     if (!graph.isComplete())
     {

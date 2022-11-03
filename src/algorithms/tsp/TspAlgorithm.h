@@ -16,7 +16,7 @@ struct Result
     Distance distance;
 };
 
-class TspAlgorithm : public Algorithm<Result>
+class TspAlgorithm : public Algorithm<Result, tsplib::Graph>
 {
 
 };

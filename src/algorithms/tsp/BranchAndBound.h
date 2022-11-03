@@ -27,7 +27,7 @@ public:
     explicit BranchAndBound(const StrategyFunction& strategy = lowestStrategy);
 
     [[nodiscard]]
-    auto calculate(const tsplib::Graph& graph) -> std::optional<Result> override;
+    auto solve(const tsplib::Graph& graph) -> std::optional<Result> override;
 
     static constexpr auto lowestStrategy = [](const NodeData& node1, const NodeData& node2) {
         return node1.cost > node2.cost;
