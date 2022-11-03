@@ -2,8 +2,6 @@
 
 #include "TspReader.h"
 
-#ifdef NDEBUG
-
 namespace qs
 {
 
@@ -11,5 +9,3 @@ namespace qs
 auto getGraph(std::string_view input) -> std::optional<tsplib::Graph>;
 
 }
-
-#endif

@@ -4,6 +4,8 @@
 namespace qs
 {
 
+#ifndef NDEBUG
+
 struct Data
 {
     std::vector<int32_t> weights;
@@ -68,6 +70,15 @@ auto getGraph(std::string_view input) -> std::optional<tsplib::Graph>
     }
     return makeGraphFromFullMatrix(data->first.weights, data->first.order);
 }
+
+#else
+
+auto getGraph(std::string_view input) -> std::optional<tsplib::Graph>
+{
+    return {};
+}
+
+#endif
 
 
 }

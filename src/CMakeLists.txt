@@ -6,8 +6,7 @@ file(GLOB_RECURSE ${PROJECT_NAME}_SRC_LIST
     )
 
 if(${CMAKE_BUILD_TYPE} MATCHES Debug)
-    message("Cannot compile parsers on debug build!")
-    list(REMOVE_ITEM ${PROJECT_NAME}_SRC_LIST ${${PROJECT_NAME}_SRC_DIR}/parsers/ProjectReader.cpp)
+    message("Mocking ProjectReader.cpp")
 endif()
 
 add_executable(${PROJECT_NAME}
