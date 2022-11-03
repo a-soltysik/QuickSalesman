@@ -3,6 +3,7 @@
 #include "algorithms/tsp/BranchAndBound.h"
 
 #include "utils/Utils.h"
+#include "algorithms/benchmarks/Benchmark.h"
 //#include <windows.h>
 
 int main()
@@ -65,23 +66,28 @@ int main()
     //qs::utils::print(graph.toString());
 
 
-    auto result1 = qs::algo::tsp::BruteForce {}.solve(graph);
-    qs::utils::print(result1.value().distance);
-    qs::utils::print(result1.value().path);
-    qs::utils::print(qs::algo::tsp::getPathLength(result1.value().path, graph));
+    auto result1 = qs::bench::run<std::chrono::nanoseconds>(qs::algo::tsp::BruteForce {}, graph);
+    qs::utils::print(result1.first.value().distance);
+    qs::utils::print(result1.first.value().path);
+    qs::utils::print(result1.second);
 
-    auto result2 = qs::algo::tsp::DynamicProgramming {}.solve(graph);
-    qs::utils::print(result2.value().distance);
-    qs::utils::print(result2.value().path);
-    qs::utils::print(qs::algo::tsp::getPathLength(result2.value().path, graph));
+    auto result2 = qs::bench::run<std::chrono::nanoseconds>(qs::algo::tsp::DynamicProgramming {}, graph);
+    qs::utils::print(result2.first.value().distance);
+    qs::utils::print(result2.first.value().path);
+    qs::utils::print(result2.second);
 
-    auto result3 = qs::algo::tsp::BranchAndBound {[](const auto& node1, const auto& node2) {
+    auto result3 = qs::bench::run<std::chrono::nanoseconds>(qs::algo::tsp::BranchAndBound {}, graph);
+    qs::utils::print(result3.first.value().distance);
+    qs::utils::print(result3.first.value().path);
+    qs::utils::print(result3.second);
+
+    auto result4 = qs::bench::run<std::chrono::nanoseconds>(qs::algo::tsp::BranchAndBound {[](const auto& node1, const auto& node2) {
         auto result1 = node1.cost * static_cast<int32_t>(node1.level);
         auto result2 = node2.cost * static_cast<int32_t>(node2.level);
 
         return result1 > result2;
-    }}.solve(graph);
-    qs::utils::print(result3.value().distance);
-    qs::utils::print(result3.value().path);
-    qs::utils::print(qs::algo::tsp::getPathLength(result3.value().path, graph));
+    }}, graph);
+    qs::utils::print(result4.first.value().distance);
+    qs::utils::print(result4.first.value().path);
+    qs::utils::print(result4.second);
 }

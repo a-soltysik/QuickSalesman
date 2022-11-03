@@ -6,6 +6,6 @@ namespace qs
 {
 
 [[nodiscard]]
-auto getGraph(std::string_view input) -> std::optional<tsplib::Graph>;
+auto getGraph([[maybe_unused]] std::string_view input) -> std::optional<tsplib::Graph>;
 
 }

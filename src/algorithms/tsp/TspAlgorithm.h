@@ -7,7 +7,7 @@
 namespace qs::algo::tsp
 {
 
-struct Result
+struct TspResult
 {
     using Path = std::vector<tsplib::Graph::Vertex>;
     using Distance = int64_t;
@@ -16,12 +16,12 @@ struct Result
     Distance distance;
 };
 
-class TspAlgorithm : public Algorithm<Result, tsplib::Graph>
+class TspAlgorithm : public Algorithm<TspResult, tsplib::Graph>
 {
 
 };
 
 [[nodiscard]]
-auto getPathLength(std::span<tsplib::Graph::Vertex> path, const tsplib::Graph& graph) -> Result::Distance;
+auto getPathLength(std::span<tsplib::Graph::Vertex> path, const tsplib::Graph& graph) -> TspResult::Distance;
 
 }

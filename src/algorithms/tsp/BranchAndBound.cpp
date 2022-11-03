@@ -9,7 +9,7 @@ BranchAndBound::BranchAndBound(const StrategyFunction& strategy)
 
 }
 
-auto BranchAndBound::solve(const tsplib::Graph& graph) -> std::optional<Result>
+auto BranchAndBound::solve(const tsplib::Graph& graph) -> Result
 {
     if (!graph.isComplete())
     {
@@ -25,7 +25,7 @@ auto BranchAndBound::solve(const tsplib::Graph& graph) -> std::optional<Result>
         if (node.level == graph.getOrder() - 1)
         {
             node.path.push_back(0);
-            return Result {
+            return ResultValue {
                 .path = std::move(node.path),
                 .distance = node.cost,
             };

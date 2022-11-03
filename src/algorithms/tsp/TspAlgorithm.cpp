@@ -4,7 +4,7 @@ namespace qs::algo::tsp
 {
 
 auto getPathLength(std::span<tsplib::Graph::Vertex> path,
-                   const tsplib::Graph& graph) -> qs::algo::tsp::Result::Distance
+                   const tsplib::Graph& graph) -> TspResult::Distance
 {
     auto length = int64_t {};
 

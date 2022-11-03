@@ -1,10 +1,15 @@
 #include "ProjectReader.h"
+
+#ifdef NDEBUG
+
 #include "Parser.h"
+
+#endif
 
 namespace qs
 {
 
-#ifndef NDEBUG
+#ifdef NDEBUG
 
 struct Data
 {
@@ -73,7 +78,7 @@ auto getGraph(std::string_view input) -> std::optional<tsplib::Graph>
 
 #else
 
-auto getGraph(std::string_view input) -> std::optional<tsplib::Graph>
+auto getGraph([[maybe_unused]] std::string_view input) -> std::optional<tsplib::Graph>
 {
     return {};
 }

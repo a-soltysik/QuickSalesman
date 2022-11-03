@@ -10,23 +10,23 @@ class DynamicProgramming : public TspAlgorithm
 {
 public:
     [[nodiscard]]
-    auto solve(const tsplib::Graph& graph) -> std::optional<Result> override;
+    auto solve(const tsplib::Graph& graph) -> Result override;
 
 private:
     struct Cost
     {
-        Result::Distance cost;
+        TspResult::Distance cost;
         tsplib::Graph::Vertex predecessor;
     };
 
     [[nodiscard]]
-    auto solve() -> Result;
+    auto solve() -> ResultValue;
 
     [[nodiscard]]
-    auto backtracePath(tsplib::Graph::Vertex predecessor) -> Result::Path;
+    auto backtracePath(tsplib::Graph::Vertex predecessor) -> TspResult::Path;
 
     [[nodiscard]]
-    auto backtracePathWithoutEnds(tsplib::Graph::Vertex predecessor) -> Result::Path;
+    auto backtracePathWithoutEnds(tsplib::Graph::Vertex predecessor) -> TspResult::Path;
 
     [[nodiscard]]
     auto findMinimalPathFor(utils::PathMask mask, tsplib::Graph::Vertex end) -> Cost;

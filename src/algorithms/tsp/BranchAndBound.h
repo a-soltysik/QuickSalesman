@@ -9,7 +9,7 @@
 namespace qs::algo::tsp
 {
 
-class BranchAndBound : TspAlgorithm
+class BranchAndBound : public TspAlgorithm
 {
 public:
     struct NodeData;
@@ -18,7 +18,7 @@ public:
 
     struct NodeData
     {
-        Result::Path          path;
+        TspResult::Path       path;
         MatrixGraph           reducedMatrix;
         tsplib::Graph::Weight cost;
         uint32_t              level;
@@ -27,7 +27,7 @@ public:
     explicit BranchAndBound(const StrategyFunction& strategy = lowestStrategy);
 
     [[nodiscard]]
-    auto solve(const tsplib::Graph& graph) -> std::optional<Result> override;
+    auto solve(const tsplib::Graph& graph) -> Result override;
 
     static constexpr auto lowestStrategy = [](const NodeData& node1, const NodeData& node2) {
         return node1.cost > node2.cost;

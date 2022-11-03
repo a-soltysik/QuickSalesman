@@ -5,10 +5,13 @@
 namespace qs::algo
 {
 
-template<typename Result, typename ...Args>
+template<typename ResultT, typename ...Args>
 class Algorithm
 {
 public:
+    using Result = std::optional<ResultT>;
+    using ResultValue = typename Result::value_type;
+
     Algorithm() = default;
     Algorithm(const Algorithm&) = default;
     Algorithm& operator=(const Algorithm&) = default;
@@ -17,7 +20,7 @@ public:
 
     virtual ~Algorithm() noexcept = default;
 
-    virtual auto solve(const Args&... args) -> std::optional<Result> = 0;
+    virtual auto solve(const Args&... args) -> Result = 0;
 };
 
 }

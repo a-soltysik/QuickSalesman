@@ -4,7 +4,7 @@
 namespace qs::algo::tsp
 {
 
-auto BruteForce::solve(const tsplib::Graph& graph) -> std::optional<Result>
+auto BruteForce::solve(const tsplib::Graph& graph) -> Result
 {
     if (!graph.isComplete())
     {
@@ -14,9 +14,9 @@ auto BruteForce::solve(const tsplib::Graph& graph) -> std::optional<Result>
     auto vertices = graph.getVertices();
     vertices.push_back(vertices.front());
 
-    auto result = Result {
+    auto result = ResultValue {
         .path = {},
-        .distance = std::numeric_limits<Result::Distance>::max()
+        .distance = std::numeric_limits<TspResult::Distance>::max()
     };
 
     const auto first = std::next(vertices.begin());

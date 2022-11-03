@@ -8,21 +8,16 @@ namespace qs::utils
 class Clock
 {
 public:
+    using Time = int64_t;
     auto start() noexcept -> void ;
     auto stop() noexcept -> void;
 
-
+    template<typename DurationType>
     [[nodiscard]]
-    auto getTimeInNanos() const -> int64_t;
-
-    [[nodiscard]]
-    auto getTimeInMicros() const -> int64_t;
-
-    [[nodiscard]]
-    auto getTimeInMillis() const -> int64_t;
-
-    [[nodiscard]]
-    auto getTimeInSeconds() const -> int64_t;
+    auto getTime() const -> int64_t
+    {
+        return std::chrono::duration_cast<DurationType>(stopPoint - startPoint).count();
+    }
 
 private:
     std::chrono::time_point<std::chrono::high_resolution_clock> startPoint;
