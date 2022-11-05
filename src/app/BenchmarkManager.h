@@ -3,6 +3,8 @@
 #include "algorithms/tsp/TspAlgorithm.h"
 #include "algorithms/benchmarks/Benchmark.h"
 #include "utils/Print.h"
+#include "algorithms/utils/GraphGenerator.h"
+
 
 namespace qs
 {
@@ -13,21 +15,28 @@ public:
     auto menu() -> void;
 
 private:
-    static auto printResult(const std::optional<algo::tsp::TspResult>& result) -> void;
-    auto readGraphFromFileMenu() -> void;
-    auto printGraph() -> void;
-    auto generateGraph(size_t order) -> tsplib::Graph;
 
     template<typename T>
-    auto manageAlgorithm(size_t order, T algorithm = T{}) -> void
+    auto manageAlgorithm(T algorithm = T {}) -> void
     {
-        auto overallResult = utils::Clock::Time {};
-        for (auto i = uint32_t{}; i < 10; i++)
+        if (!graphOrder.has_value())
         {
-            overallResult += bench::runAverage<std::chrono::milliseconds>(10, algorithm, generateGraph(order));
+            utils::print("Liczba wierzchołków grafu nie została wybrana");
+            return;
+        }
+        auto overallResult = utils::Clock::Time {};
+
+        for (auto i = uint32_t {}; i < 100; i++)
+        {
+            overallResult += bench::run<std::chrono::milliseconds>(
+                T {algorithm},
+                algo::utils::generateRandomCompleteGraph(graphOrder.value())
+            ).second;
         }
         utils::print("Średni czas: ", overallResult / 10, "ms");
     }
+
+    std::optional<tsplib::Graph::Vertex> graphOrder;
 };
 
 }

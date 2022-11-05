@@ -1,5 +1,5 @@
 #include "DynamicProgramming.h"
-#include "utils/CombinationsGenerator.h"
+#include "algorithms/utils/CombinationsGenerator.h"
 
 #include <algorithm>
 

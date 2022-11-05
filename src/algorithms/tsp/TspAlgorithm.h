@@ -1,7 +1,7 @@
 #pragma once
 
 #include "algorithms/Algorithm.h"
-#include "algorithms/tsp/utils/PathMask.h"
+#include "algorithms/utils/PathMask.h"
 #include <span>
 
 namespace qs::algo::tsp

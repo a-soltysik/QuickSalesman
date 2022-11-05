@@ -3,6 +3,7 @@
 #include "utils/Utils.h"
 
 #include "TspManager.h"
+#include "BenchmarkManager.h"
 
 #include <exception>
 
@@ -46,8 +47,12 @@ auto App::mainMenu() -> void
         case 1:
             TspManager{}.menu();
             break;
+        case 2:
+            BenchmarkManager{}.menu();
+            break;
+        default:
+            return;
         }
-
     }
 }
 }

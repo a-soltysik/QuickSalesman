@@ -40,9 +40,8 @@ template<bnb::Container T>
 class BranchAndBound : public TspAlgorithm
 {
 public:
-    template<typename... Args>
-    explicit BranchAndBound(Args&& ... args)
-        : container(std::forward<Args>(args)...) { }
+    explicit BranchAndBound(T&& container)
+        : container(std::move(container)) { }
 
     [[nodiscard]]
     auto solve(const tsplib::Graph& graph) -> Result override;
@@ -90,17 +89,16 @@ protected:
 namespace bnb
 {
 
-inline const auto lowCost = BranchAndBound<
-    qs::utils::ExtendedPriorityQueue<NodeData, std::vector<NodeData>, decltype(less)>> {less};
+inline const auto lowCost = BranchAndBound {
+    qs::utils::ExtendedPriorityQueue<NodeData, std::vector<NodeData>, decltype(less)> {less}};
 
-inline const auto depthFirstSearch = BranchAndBound<qs::utils::ExtendedStack<NodeData>> {};
+inline const auto depthFirstSearch = BranchAndBound {qs::utils::ExtendedStack<NodeData>{}};
 
 }
 
 template<bnb::Container T>
 auto BranchAndBound<T>::solve(const tsplib::Graph& graph) -> Result
 {
-    qs::utils::print(std::is_trivially_copyable_v<bnb::NodeData>);
     if (!graph.isComplete())
     {
         return {};

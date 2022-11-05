@@ -3,6 +3,7 @@
 #include <filesystem>
 #include <fstream>
 #include <iostream>
+#include <random>
 
 #if defined(NDEBUG)
 #include "Parser.h"
@@ -145,6 +146,16 @@ auto saturatedAdd(std::initializer_list<T> numbers) -> T
         result = saturatedAdd(result, number);
     }
     return result;
+}
+
+template<std::integral T>
+[[nodiscard]] T getRandom(T from, T to)
+{
+    static std::random_device device;
+    static std::mt19937 rng(device());
+
+    std::uniform_int_distribution<T> distribution(from, to);
+    return distribution(rng);
 }
 
 }

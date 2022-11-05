@@ -1,18 +1,18 @@
 #include <gtest/gtest.h>
 #include <cmath>
 
-#include "algorithms/tsp/utils/PathMask.h"
+#include "algorithms/utils/PathMask.h"
 
 TEST(UtilsTest, PathMaskValue)
 {
-    using qs::algo::tsp::utils::PathMask;
+    using qs::algo::utils::PathMask;
     EXPECT_EQ(PathMask{123}.value(), 123);
     EXPECT_EQ(PathMask{std::numeric_limits<uint64_t>::max()}.value(), std::numeric_limits<uint64_t>::max());
 }
 
 TEST(UtilsTest, PathMaskVisited)
 {
-    using namespace qs::algo::tsp::utils;
+    using namespace qs::algo::utils;
 
     auto pathMask = allVisited(64);
     EXPECT_EQ(pathMask.value(), std::numeric_limits<uint64_t>::max());
@@ -30,6 +30,5 @@ TEST(UtilsTest, PathMaskVisited)
     EXPECT_TRUE(pathMask.isVisited(9));
 
     EXPECT_EQ(pathMask.value(), 0b1111101011111111);
-
 }
 
