@@ -8,12 +8,15 @@ namespace qs::utils
 namespace detail
 {
 
+template<typename T>
+concept RangeNotString = std::ranges::range<T> && (!std::convertible_to<T, std::string_view>);
+
 auto spaceAndPrint(const auto& t) -> void
 {
     std::cout << ' ' << t;
 }
 
-auto spaceAndPrint(const std::ranges::range auto& range) -> void
+auto spaceAndPrint(const RangeNotString auto& range) -> void
 {
     std::cout << ' ';
     for (const auto& e : range)
@@ -29,8 +32,7 @@ auto print(const auto& t) -> void
     std::cout << t << '\n';
 }
 
-template<typename T>
-auto print(const T& range) -> void requires std::ranges::range<T> && (!std::convertible_to<T, std::string_view>)
+auto print(const detail::RangeNotString auto& range) -> void
 {
     for (const auto& e : range)
     {

@@ -122,4 +122,29 @@ inline auto setUtf8() -> void
 #endif
 }
 
+template<typename T>
+auto saturatedAdd(T t1, T t2) -> T
+{
+    static constexpr auto max = std::numeric_limits<T>::max();
+    if (t1 > max - t2)
+    {
+        return max;
+    }
+    else
+    {
+        return t1 + t2;
+    }
+}
+
+template<typename T>
+auto saturatedAdd(std::initializer_list<T> numbers) -> T
+{
+    auto result = T{};
+    for (const auto number : numbers)
+    {
+        result = saturatedAdd(result, number);
+    }
+    return result;
+}
+
 }

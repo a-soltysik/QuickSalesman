@@ -18,13 +18,14 @@ auto TspManager::menu() -> void
                                    "2. Wyświetl graf\n"
                                    "3. Znajdź najkrótszą ścieżkę algorytmem typu Brute Force\n"
                                    "4. Znajdź najkrótszą ścieżkę algorytmem typu Dynamic Programming\n"
-                                   "5. Znajdź najkrótszą ścieżkę algorytmem typu Branch and Bound\n"
-                                   "6. Wróć"
+                                   "5. Znajdź najkrótszą ścieżkę algorytmem typu Branch and Bound (Low Cost)\n"
+                                   "6. Znajdź najkrótszą ścieżkę algorytmem typu Branch and Bound (DFS)\n"
+                                   "7. Wróć"
                                    "> ";
 
     while (true)
     {
-        auto choice = utils::getChoiceFromMenu(MENU, 1, 6);
+        auto choice = utils::getChoiceFromMenu(MENU, 1, 7);
         switch (choice)
         {
         case 1:
@@ -40,7 +41,10 @@ auto TspManager::menu() -> void
             manageAlgorithm<algo::tsp::DynamicProgramming>();
             break;
         case 5:
-            manageAlgorithm<algo::tsp::BranchAndBound>();
+            manageAlgorithm(algo::tsp::bnb::lowCost);
+            break;
+        case 6:
+            manageAlgorithm(algo::tsp::bnb::depthFirstSearch);
             break;
         default:
             return;
@@ -48,12 +52,13 @@ auto TspManager::menu() -> void
     }
 }
 
-auto TspManager::printResult(const std::optional<algo::tsp::TspResult>& result) -> void
+auto TspManager::printResult(const std::pair<algo::tsp::TspAlgorithm::Result, utils::Clock::Time>& result) -> void
 {
-    if (result.has_value())
+    if (result.first.has_value())
     {
-        utils::print("Długość najkrótszej ścieżki wynosi: ", result->distance);
-        utils::print("Ścieżka: ", result->path);
+        utils::print("Długość najkrótszej ścieżki wynosi: ", result.first->distance);
+        utils::print("Ścieżka: ", result.first->path);
+        utils::print("Czas: ", result.second, "ms");
     }
     else
     {

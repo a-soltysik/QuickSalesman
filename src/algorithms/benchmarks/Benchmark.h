@@ -2,6 +2,7 @@
 
 #include "algorithms/Algorithm.h"
 #include "utils/Clock.h"
+#include "utils/Utils.h"
 
 namespace qs::bench
 {

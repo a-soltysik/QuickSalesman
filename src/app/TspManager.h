@@ -2,6 +2,8 @@
 
 #include "parsers/TspReader.h"
 #include "algorithms/tsp/TspAlgorithm.h"
+#include "algorithms/benchmarks/Benchmark.h"
+#include "utils/Print.h"
 
 namespace qs
 {
@@ -12,16 +14,16 @@ public:
     auto menu() -> void;
 
 private:
-    static auto printResult(const std::optional<algo::tsp::TspResult>& result) -> void;
+    static auto printResult(const std::pair<algo::tsp::TspAlgorithm::Result, utils::Clock::Time>& result) -> void;
     auto readGraphFromFileMenu() -> void;
     auto printGraph() -> void;
 
     template<typename T>
-    auto manageAlgorithm(const auto&... args) -> void
+    auto manageAlgorithm(T t = T{}) -> void
     {
         if (graph.has_value())
         {
-            printResult(T{args...}.solve(graph.value()));
+            printResult(qs::bench::run<std::chrono::milliseconds>(std::move(t), graph.value()));
         }
         else
         {
