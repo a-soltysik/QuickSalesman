@@ -69,7 +69,7 @@ auto DynamicProgramming::makeCostTable() -> std::vector<std::vector<Cost>>
 
 auto DynamicProgramming::getNumberOfSubsets(uint64_t numberOfVertices) -> uint64_t
 {
-    return 1 << numberOfVertices;
+    return uint64_t {1} << numberOfVertices;
 }
 
 auto DynamicProgramming::combinationToPath(utils::PathMask combination) -> utils::PathMask

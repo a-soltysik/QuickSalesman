@@ -29,7 +29,7 @@ struct PathMask
     [[nodiscard]]
     constexpr auto isVisited(uint64_t vertex) const noexcept -> bool
     {
-        return (mask & (1 << saturate(vertex))) > 0;
+        return (mask & (uint64_t {1} << saturate(vertex))) > 0;
     }
 
     [[nodiscard]]

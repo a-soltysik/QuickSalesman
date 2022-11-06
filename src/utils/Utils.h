@@ -10,6 +10,11 @@
 #endif
 
 #if defined(_WIN32)
+
+#if !defined(NOMINMAX)
+#define NOMINMAX
+#endif
+
 #include <windows.h>
 #endif
 
@@ -18,6 +23,7 @@ namespace qs::utils
 
 // Functions from GoogleBenchmark
 
+#if !defined(_MSC_VER)
 template<class Tp>
 auto doNotOptimize(Tp const& value) -> void
 {
@@ -33,6 +39,15 @@ auto doNotOptimize(Tp& value) -> void
     asm volatile("" : "+m,r"(value) : : "memory");
 #endif
 }
+#else
+void useCharPointer(char const volatile*);
+
+template<class Tp>
+auto doNotOptimize(Tp& value) -> void
+{
+    useCharPointer(&reinterpret_cast<char const volatile&>(value));
+}
+#endif
 
 template<typename T>
 std::optional<T> getInput(std::istream& is)
@@ -74,54 +89,11 @@ std::optional<T> getInput(std::istream& is)
     return {};
 }
 
-inline auto getChoiceFromMenu(const std::string& menu, uint32_t min, uint32_t max) -> uint32_t
-{
-    auto wrongChoice = bool{};
-    auto choiceValue = uint32_t {};
+auto getChoiceFromMenu(const std::string& menu, uint32_t min, uint32_t max) -> uint32_t;
 
-    do
-    {
-        std::cout << menu;
-        const auto choice = getInput<uint32_t>(std::cin);
-        wrongChoice = !choice.has_value() || (choice.has_value() && (choice.value() < min || choice.value() > max));
-        if (wrongChoice)
-        {
-            std::cout << "Niepoprawny wybór!\n";
-        }
-        else
-        {
-            choiceValue = choice.value();
-        }
-    }
-    while (wrongChoice);
+auto getFileContent(const std::filesystem::path& path) -> std::optional<std::string>;
 
-    return choiceValue;
-}
-
-inline auto getFileContent(const std::filesystem::path& path) -> std::optional<std::string>
-{
-    auto fin = std::ifstream{path};
-
-    if (!fin.good())
-    {
-        return {};
-    }
-
-    fin.seekg(0, std::ios::end);
-    const auto size = fin.tellg();
-    auto buffer = std::string(static_cast<size_t>(size), 0);
-    fin.seekg(0);
-    fin.read(buffer.data(), size);
-
-    return buffer;
-}
-
-inline auto setUtf8() -> void
-{
-#if defined(_WIN32)
-    SetConsoleOutputCP(CP_UTF8);
-#endif
-}
+auto setUtf8() -> void;
 
 template<typename T>
 auto saturatedAdd(T t1, T t2) -> T
