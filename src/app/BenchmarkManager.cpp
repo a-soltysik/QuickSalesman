@@ -6,6 +6,7 @@
 
 auto qs::BenchmarkManager::menu() -> void
 {
+    using namespace algo::tsp;
     static constexpr const char* MENU =
                                    "Wybierz operację:\n"
                                    "1. Wybierz liczbę wierzchołków grafu\n"
@@ -25,16 +26,16 @@ auto qs::BenchmarkManager::menu() -> void
             graphOrder = utils::getChoiceFromMenu("Wpisz liczbę wierzchołków <2, 50>: ", 2, 50);
             break;
         case 2:
-            manageAlgorithm<algo::tsp::BruteForce>();
+            manageAlgorithm<BruteForce>();
             break;
         case 3:
-            manageAlgorithm<algo::tsp::DynamicProgramming>();
+            manageAlgorithm<DynamicProgramming>();
             break;
         case 4:
-            manageAlgorithm(algo::tsp::bnb::lowCost);
+            manageAlgorithm(bnb::lowCost);
             break;
         case 5:
-            manageAlgorithm(algo::tsp::bnb::depthFirstSearch);
+            manageAlgorithm(bnb::depthFirstSearch);
             break;
         default:
             return;
