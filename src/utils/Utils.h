@@ -121,13 +121,25 @@ auto saturatedAdd(std::initializer_list<T> numbers) -> T
 }
 
 template<std::integral T>
-[[nodiscard]] T getRandom(T from, T to)
+[[nodiscard]]
+auto getRandom(T from, T to) -> T
 {
-    static std::random_device device;
-    static std::mt19937 rng(device());
+    static auto device = std::random_device {};
+    static auto rng    = std::mt19937 {device()};
 
-    std::uniform_int_distribution<T> distribution(from, to);
+    if (from > to)
+    {
+        std::swap(from, to);
+    }
+
+    auto distribution = std::uniform_int_distribution<T> {from, to};
     return distribution(rng);
 }
+
+template<class T, template<class...> class Template>
+struct isSpecialization : std::false_type { };
+
+template<template<class...> class Template, class... Args>
+struct isSpecialization<Template<Args...>, Template> : std::true_type { };
 
 }
