@@ -2,7 +2,7 @@
 
 #ifdef NDEBUG
 
-#include "Parser.h"
+#include "../ext/TspReader/include/Parser.h"
 
 #endif
 

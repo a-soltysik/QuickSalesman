@@ -5,9 +5,7 @@
 #include <iostream>
 #include <random>
 
-#if defined(NDEBUG)
-#include "Parser.h"
-#endif
+#include "../ext/TspReader/include/utils/Numbers.h"
 
 #if defined(_WIN32)
 
