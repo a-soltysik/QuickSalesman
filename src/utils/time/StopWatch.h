@@ -14,7 +14,14 @@ public:
 
     template<typename DurationType>
     [[nodiscard]]
-    auto getTime() const -> int64_t
+    auto getTime() const -> DurationType
+    {
+        return stopPoint - startPoint;
+    }
+
+    template<typename DurationType>
+    [[nodiscard]]
+    auto getTimeCount() const -> Time
     {
         return std::chrono::duration_cast<DurationType>(stopPoint - startPoint).count();
     }

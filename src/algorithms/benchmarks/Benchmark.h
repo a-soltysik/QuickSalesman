@@ -15,7 +15,7 @@ auto run(algo::Algorithm<ResultT, Args...>&& algorithm,
     clock.start();
     auto result = algorithm.solve(args...);
     clock.stop();
-    return {std::move(result), clock.getTime<DurationType>()};
+    return {std::move(result), clock.getTimeCount<DurationType>()};
 }
 
 template<typename DurationType, typename ResultT, typename... Args>
@@ -31,7 +31,7 @@ auto runAverage(size_t times,
         utils::doNotOptimize(result);
     }
     clock.stop();
-    return clock.template getTime<DurationType>() / times;
+    return clock.template getTimeCount<DurationType>() / times;
 }
 
 }
