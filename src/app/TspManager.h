@@ -14,7 +14,7 @@ public:
     auto menu() -> void;
 
 private:
-    static auto printResult(const std::pair<algo::tsp::TspAlgorithm::Result, utils::Clock::Time>& result) -> void;
+    static auto printResult(const std::pair<algo::tsp::TspAlgorithm::Result, utils::StopWatch::Time>& result) -> void;
     auto readGraphFromFileMenu() -> void;
     auto printGraph() -> void;
 

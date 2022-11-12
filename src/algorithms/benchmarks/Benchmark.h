@@ -1,7 +1,7 @@
 #pragma once
 
 #include "algorithms/Algorithm.h"
-#include "utils/Clock.h"
+#include "utils/time/StopWatch.h"
 #include "utils/Utils.h"
 
 namespace qs::bench
@@ -9,9 +9,9 @@ namespace qs::bench
 
 template<typename DurationType, typename ResultT, typename... Args>
 auto run(algo::Algorithm<ResultT, Args...>&& algorithm,
-         const Args& ... args) -> std::pair<typename algo::Algorithm<ResultT, Args...>::Result, utils::Clock::Time>
+         const Args& ... args) -> std::pair<typename algo::Algorithm<ResultT, Args...>::Result, utils::StopWatch::Time>
 {
-    auto clock = utils::Clock {};
+    auto clock = utils::StopWatch {};
     clock.start();
     auto result = algorithm.solve(args...);
     clock.stop();
@@ -21,9 +21,9 @@ auto run(algo::Algorithm<ResultT, Args...>&& algorithm,
 template<typename DurationType, typename ResultT, typename... Args>
 auto runAverage(size_t times,
                 algo::Algorithm<ResultT, Args...>&& algorithm,
-                const Args& ... args) -> utils::Clock::Time
+                const Args& ... args) -> utils::StopWatch::Time
 {
-    auto clock = utils::Clock {};
+    auto clock = utils::StopWatch {};
     clock.start();
     for (auto i = size_t {}; i < times; i++)
     {

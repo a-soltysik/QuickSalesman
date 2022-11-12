@@ -24,7 +24,7 @@ private:
             utils::print("Liczba wierzchołków grafu nie została wybrana");
             return;
         }
-        auto overallResult = utils::Clock::Time {};
+        auto overallResult = utils::StopWatch::Time {};
 
         for (auto i = uint32_t {}; i < 100; i++)
         {

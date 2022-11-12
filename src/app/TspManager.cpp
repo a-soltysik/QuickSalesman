@@ -52,7 +52,7 @@ auto TspManager::menu() -> void
     }
 }
 
-auto TspManager::printResult(const std::pair<algo::tsp::TspAlgorithm::Result, utils::Clock::Time>& result) -> void
+auto TspManager::printResult(const std::pair<algo::tsp::TspAlgorithm::Result, utils::StopWatch::Time>& result) -> void
 {
     if (result.first.has_value())
     {
