@@ -19,7 +19,7 @@ auto qs::BenchmarkManager::menu() -> void
 
     while (true)
     {
-        auto choice = utils::getChoiceFromMenu(MENU, 1, 5);
+        auto choice = utils::getChoiceFromMenu(MENU, 1, 6);
         switch (choice)
         {
         case 1:
