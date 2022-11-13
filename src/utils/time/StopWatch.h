@@ -8,7 +8,6 @@ namespace qs::utils
 class StopWatch
 {
 public:
-    using Time = int64_t;
     auto start() noexcept -> void;
     auto stop() noexcept -> void;
 
@@ -16,14 +15,14 @@ public:
     [[nodiscard]]
     auto getTime() const -> DurationType
     {
-        return stopPoint - startPoint;
+        return std::chrono::duration_cast<DurationType>(stopPoint - startPoint);
     }
 
     template<typename DurationType>
     [[nodiscard]]
-    auto getTimeCount() const -> Time
+    auto peak() const -> DurationType
     {
-        return std::chrono::duration_cast<DurationType>(stopPoint - startPoint).count();
+        return std::chrono::duration_cast<DurationType>(std::chrono::high_resolution_clock::now() - startPoint);
     }
 
 private:

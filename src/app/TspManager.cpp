@@ -52,13 +52,14 @@ auto TspManager::menu() -> void
     }
 }
 
-auto TspManager::printResult(const std::pair<algo::tsp::TspAlgorithm::Result, utils::StopWatch::Time>& result) -> void
+auto
+TspManager::printResult(const std::pair<algo::tsp::TspAlgorithm::Result, std::chrono::milliseconds>& result) -> void
 {
     if (result.first.has_value())
     {
         utils::print("Długość najkrótszej ścieżki wynosi: ", result.first->distance);
         utils::print("Ścieżka: ", result.first->path);
-        utils::print("Czas: ", result.second, "ms");
+        utils::print("Czas: ", result.second.count(), "ms");
     }
     else
     {

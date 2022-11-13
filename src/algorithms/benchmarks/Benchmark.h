@@ -9,19 +9,19 @@ namespace qs::bench
 
 template<typename DurationType, typename ResultT, typename... Args>
 auto run(algo::Algorithm<ResultT, Args...>&& algorithm,
-         const Args& ... args) -> std::pair<typename algo::Algorithm<ResultT, Args...>::Result, utils::StopWatch::Time>
+         const Args& ... args) -> std::pair<typename algo::Algorithm<ResultT, Args...>::Result, DurationType>
 {
     auto clock = utils::StopWatch {};
     clock.start();
     auto result = algorithm.solve(args...);
     clock.stop();
-    return {std::move(result), clock.getTimeCount<DurationType>()};
+    return {std::move(result), clock.getTime<DurationType>()};
 }
 
 template<typename DurationType, typename ResultT, typename... Args>
 auto runAverage(size_t times,
                 algo::Algorithm<ResultT, Args...>&& algorithm,
-                const Args& ... args) -> utils::StopWatch::Time
+                const Args& ... args) -> DurationType
 {
     auto clock = utils::StopWatch {};
     clock.start();
@@ -31,7 +31,7 @@ auto runAverage(size_t times,
         utils::doNotOptimize(result);
     }
     clock.stop();
-    return clock.template getTimeCount<DurationType>() / times;
+    return clock.template getTime<DurationType>() / times;
 }
 
 }
