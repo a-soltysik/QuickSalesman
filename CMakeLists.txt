@@ -8,7 +8,7 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     set(COMPILER_REL_CXX_FLAGS "/O2 /MD")
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpessimizing-move -Wredundant-move -pedantic -Wconversion")
-    set(COMPILER_REL_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -static")
+    set(COMPILER_REL_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -static -fprofile-use")
 endif ()
 
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} ${CMAKE_CXX_FLAGS}")

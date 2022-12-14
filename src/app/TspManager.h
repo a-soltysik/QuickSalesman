@@ -11,14 +11,9 @@ namespace qs
 class TspManager
 {
 public:
-    auto menu() -> void;
+    virtual auto menu() -> void = 0;
 
-private:
-    static auto
-    printResult(const std::pair<algo::tsp::TspAlgorithm::Result, std::chrono::milliseconds>& result) -> void;
-    auto readGraphFromFileMenu() -> void;
-    auto printGraph() -> void;
-
+protected:
     template<typename T>
     auto manageAlgorithm(T t = T{}) -> void
     {
@@ -28,9 +23,15 @@ private:
         }
         else
         {
-            utils::print("Graf nie został załadowany");
+            print("Graf nie został załadowany");
         }
     }
+
+    static auto printResult(const std::pair<algo::tsp::TspAlgorithm::Result, std::chrono::milliseconds>& result) -> void;
+    auto readGraphFromFileMenu() -> void;
+    auto printGraph() -> void;
+
+
 
     std::optional<tsplib::Graph> graph;
 };

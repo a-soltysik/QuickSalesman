@@ -19,11 +19,7 @@ auto BasicTimer::hasTimeoutOccurred() const -> bool
 {
     if (running)
     {
-        if (stopWatch.peak<std::chrono::milliseconds>() > max)
-        {
-            return true;
-        }
-        return false;
+        return !isRunning();
     }
     else
     {
@@ -37,7 +33,11 @@ auto BasicTimer::hasTimeoutOccurred() const -> bool
 
 auto BasicTimer::isRunning() const -> bool
 {
-    return running;
+    if (stopWatch.peak<std::chrono::milliseconds>() > max)
+    {
+        return false;
+    }
+    return true;
 }
 
 }

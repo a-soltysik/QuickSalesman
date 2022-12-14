@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-namespace qs::utils
+namespace qs
 {
 
 namespace detail

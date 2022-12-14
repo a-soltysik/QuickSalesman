@@ -6,6 +6,7 @@
 #include <random>
 
 #include "../ext/TspReader/include/utils/Numbers.h"
+#include "../ext/TspReader/include/Graph.h"
 
 #if defined(_WIN32)
 
@@ -48,10 +49,12 @@ auto doNotOptimize(Tp& value) -> void
 #endif
 
 template<typename T>
-std::optional<T> getInput(std::istream& is)
+std::optional<T> getInput(std::istream& is, std::string_view hint = "")
 {
 #if defined(NDEBUG)
     static_assert(std::is_default_constructible_v<T>);
+
+    std::cout << hint;
 
     auto value = T{};
 
@@ -118,20 +121,37 @@ auto saturatedAdd(std::initializer_list<T> numbers) -> T
     return result;
 }
 
+inline auto getRandomGenerator() -> std::mt19937&
+{
+    thread_local auto device = std::random_device {};
+    thread_local auto rng    = std::mt19937 {device()};
+    return rng;
+}
+
 template<std::integral T>
 [[nodiscard]]
 auto getRandom(T from, T to) -> T
 {
-    static auto device = std::random_device {};
-    static auto rng    = std::mt19937 {device()};
-
     if (from > to)
     {
         std::swap(from, to);
     }
 
     auto distribution = std::uniform_int_distribution<T> {from, to};
-    return distribution(rng);
+    return distribution(getRandomGenerator());
+}
+
+template<std::floating_point T>
+[[nodiscard]]
+auto getRandom(T from, T to) -> T
+{
+    if (from > to)
+    {
+        std::swap(from, to);
+    }
+
+    auto distribution = std::uniform_real_distribution<T> {from, to};
+    return distribution(getRandomGenerator());
 }
 
 template<class T, template<class...> class Template>
@@ -140,4 +160,30 @@ struct isSpecialization : std::false_type { };
 template<template<class...> class Template, class... Args>
 struct isSpecialization<Template<Args...>, Template> : std::true_type { };
 
+auto hashCombine(std::size_t& seed);
+
+template <typename T, typename... Other>
+auto hashCombine(std::size_t& seed, const T& t, const Other&... other)
+{
+    std::hash<T> hasher;
+    seed ^= hasher(t) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+    hashCombine(seed, other...);
+}
+
+auto choose(double probability) -> bool;
+
+}
+
+template<typename T>
+auto operator+(const std::optional<T>& opt1, const std::optional<T>& opt2) -> std::optional<T>
+{
+    if (opt1.has_value())
+    {
+        return opt1.value();
+    }
+    if (opt2.has_value())
+    {
+        return opt2.value();
+    }
+    return {};
 }

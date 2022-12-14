@@ -8,10 +8,10 @@ namespace qs
 class App
 {
 public:
-    auto run() -> int;
+    static auto run() -> int;
 
 private:
-    auto mainMenu() -> void;
+    static auto mainMenu() -> void;
 
 
 };

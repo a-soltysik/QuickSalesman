@@ -2,8 +2,9 @@
 #include "utils/Print.h"
 #include "utils/Utils.h"
 
-#include "TspManager.h"
+#include "ExactAlgorithmManager.h"
 #include "BenchmarkManager.h"
+#include "HeuristicAlgorithmManager.h"
 
 #include <exception>
 
@@ -21,11 +22,11 @@ auto App::run() -> int
     }
     catch (const std::exception& e)
     {
-        utils::print(e.what());
+        print(e.what());
     }
     catch (...)
     {
-        utils::print("Nieznany błąd\n");
+        print("Nieznany błąd\n");
     }
     return -1;
 }
@@ -34,20 +35,24 @@ auto App::mainMenu() -> void
 {
     static constexpr const char* MAIN_MENU =
         "Wybierz tryb:\n"
-        "1. Tryb algorytmów\n"
-        "2. Tryb benchmarków\n"
-        "3. Wyjście\n"
+        "1. Tryb algorytmów dokładnych\n"
+        "2. Tryb algorytmów heurystycznych\n"
+        "3. Tryb benchmarków\n"
+        "4. Wyjście\n"
         "> ";
 
     while (true)
     {
-        const auto choice = utils::getChoiceFromMenu(MAIN_MENU, 1, 3);
+        const auto choice = utils::getChoiceFromMenu(MAIN_MENU, 1, 4);
         switch (choice)
         {
         case 1:
-            TspManager{}.menu();
+            ExactAlgorithmManager{}.menu();
             break;
         case 2:
+            HeuristicAlgorithmManager{}.menu();
+            break;
+        case 3:
             BenchmarkManager{}.menu();
             break;
         default:

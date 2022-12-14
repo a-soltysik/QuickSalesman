@@ -1,4 +1,5 @@
 #include "Utils.h"
+#include "Print.h"
 
 namespace qs::utils
 {
@@ -10,12 +11,11 @@ auto getChoiceFromMenu(const std::string& menu, uint32_t min, uint32_t max) -> u
 
     do
     {
-        std::cout << menu;
-        const auto choice = getInput<uint32_t>(std::cin);
+        const auto choice = getInput<uint32_t>(std::cin, menu);
         wrongChoice = !choice.has_value() || (choice.has_value() && (choice.value() < min || choice.value() > max));
         if (wrongChoice)
         {
-            std::cout << "Niepoprawny wybór!\n";
+            print("Niepoprawny wybór!");
         }
         else
         {
@@ -36,13 +36,7 @@ auto getFileContent(const std::filesystem::path& path) -> std::optional<std::str
         return {};
     }
 
-    fin.seekg(0, std::ios::end);
-    const auto size = fin.tellg();
-    auto buffer = std::string(static_cast<size_t>(size), 0);
-    fin.seekg(0);
-    fin.read(buffer.data(), size);
-
-    return buffer;
+    return (std::stringstream{} << fin.rdbuf()).str();
 }
 
 auto setUtf8() -> void
@@ -53,5 +47,12 @@ auto setUtf8() -> void
 }
 
 auto useCharPointer(char const volatile*) -> void{}
+
+auto choose(double probability) -> bool
+{
+    return getRandom<double>(0., 1.) < probability;
+}
+
+auto hashCombine([[maybe_unused]] std::size_t& seed) {}
 
 }

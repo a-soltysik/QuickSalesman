@@ -14,7 +14,7 @@ auto getGraph6() -> std::pair<tsplib::Graph, qs::algo::tsp::TspResult::Distance>
                                              "40 20  0 10 22 50\n"
                                              "41 24 20  0 14 42\n"
                                              "38 30 32 24  0 28\n"
-                                             "50 54 60 52 38  0"sv;
+                                             "50 54 60 52 38  0\n"sv;
 
     auto graph = qs::getGraph(data);
     return {
@@ -36,7 +36,7 @@ auto getGraph10() -> std::pair<tsplib::Graph, qs::algo::tsp::TspResult::Distance
                                              "107  34 100  68  60  64  -1  15  55  16  \n"
                                              " 77  58  68  62  65  21  15  -1  17  34  \n"
                                              " 87  66  33  84  29  42  55  17  -1  68  \n"
-                                             " 43  15  30  81  91  46  16  34  68  -1"sv;
+                                             " 43  15  30  81  91  46  16  34  68  -1\n"sv;
 
     auto graph = qs::getGraph(data);
     return {
@@ -60,7 +60,7 @@ auto getGraph12() -> std::pair<tsplib::Graph, qs::algo::tsp::TspResult::Distance
                                              "51 23 41 62 21 55 23 33 -1 29 62 46\n"
                                              "55 31 29 42 46 31 31 15 29 -1 51 21\n"
                                              "29 41 79 21 82 33 77 37 62 51 -1 65\n"
-                                             "74 51 21 51 58 37 37 33 46 21 65 -1"sv;
+                                             "74 51 21 51 58 37 37 33 46 21 65 -1\n"sv;
 
     auto graph = qs::getGraph(data);
     return {
@@ -85,7 +85,7 @@ auto getGraph13() -> std::pair<tsplib::Graph, qs::algo::tsp::TspResult::Distance
                                              "55 31 29 42 46 31 31 15 29 -1 51 21 41\n"
                                              "29 41 79 21 82 33 77 37 62 51 -1 65 42\n"
                                              "74 51 21 51 58 37 37 33 46 21 65 -1 61\n"
-                                             "23 11 64 51 46 51 51 33 29 41 42 61 -1"sv;
+                                             "23 11 64 51 46 51 51 33 29 41 42 61 -1\n"sv;
 
     auto graph = qs::getGraph(data);
     return {
@@ -111,7 +111,7 @@ auto getGraph14() -> std::pair<tsplib::Graph, qs::algo::tsp::TspResult::Distance
                                              "29 41 79 21 82 33 77 37 62 51 -1 65 42 59\n"
                                              "74 51 21 51 58 37 37 33 46 21 65 -1 61 11\n"
                                              "23 11 64 51 46 51 51 33 29 41 42 61 -1 62\n"
-                                             "72 52 31 43 65 29 46 31 51 23 59 11 62 -1"sv;
+                                             "72 52 31 43 65 29 46 31 51 23 59 11 62 -1\n"sv;
 
     auto graph = qs::getGraph(data);
     return {
@@ -138,7 +138,7 @@ auto getGraph15() -> std::pair<tsplib::Graph, qs::algo::tsp::TspResult::Distance
                                              "74 51 21 51 58 37 37 33 46 21 65 -1 61 11 55\n"
                                              "23 11 64 51 46 51 51 33 29 41 42 61 -1 62 23\n"
                                              "72 52 31 43 65 29 46 31 51 23 59 11 62 -1 59\n"
-                                             "46 21 51 64 23 59 33 37 11 37 61 55 23 59 -1"sv;
+                                             "46 21 51 64 23 59 33 37 11 37 61 55 23 59 -1\n"sv;
 
     auto graph = qs::getGraph(data);
     return {

@@ -21,7 +21,7 @@ private:
     {
         if (!graphOrder.has_value())
         {
-            utils::print("Liczba wierzchołków grafu nie została wybrana");
+            print("Liczba wierzchołków grafu nie została wybrana");
             return;
         }
         auto overallResult = std::chrono::milliseconds {};
@@ -33,7 +33,7 @@ private:
                 algo::utils::generateRandomCompleteGraph(graphOrder.value())
             ).second;
         }
-        utils::print("Średni czas: ", (overallResult / 10).count(), "ms");
+        print("Średni czas: ", (overallResult / 10).count(), "ms");
     }
 
     std::optional<tsplib::Graph::Vertex> graphOrder;

@@ -6,10 +6,13 @@
 
 #endif
 
+#include <ranges>
+#include <span>
+#include "utils/Utils.h"
+#include "utils/Print.h"
+
 namespace qs
 {
-
-#ifdef NDEBUG
 
 struct Data
 {
@@ -17,28 +20,118 @@ struct Data
     size_t               order;
 };
 
-template<std::unsigned_integral T>
-auto tokenizedNatural(std::string_view input) -> fp::Result<T>
+auto getTsplibDimension(std::string_view input) -> std::optional<size_t>;
+auto getDimension(std::string_view input) -> std::optional<size_t>;
+
+auto getTsplibWeights(std::string_view input) -> std::optional<std::vector<int32_t>>;
+auto getWeights(std::string_view input) -> std::optional<std::vector<int32_t>>;
+
+auto extractWeightsFromStrings(std::span<const std::string> strings) -> std::optional<std::vector<int32_t>>;
+
+auto getData(std::string_view input) -> std::optional<Data>
 {
-    return fp::sequence([](auto number) { return number; },
-                        fp::tokenLeft(fp::natural<T>)
-    )(input);
+    const auto dimension = getTsplibDimension(input) + getDimension(input);
+    if (!dimension.has_value())
+    {
+        return {};
+    }
+
+    const auto weights = getTsplibWeights(input) + getWeights(input);
+    if (!weights.has_value())
+    {
+        return {};
+    }
+    return Data {
+        weights.value(),
+        dimension.value(),
+    };
 }
 
-template<std::integral T>
-auto tokenizedIntegers(std::string_view input) -> fp::Result<std::vector<T>>
+auto getTsplibDimension(std::string_view input) -> std::optional<size_t>
 {
-    return fp::sequence([](const auto& integers) { return integers; },
-                        fp::some(fp::tokenLeft(fp::integer<T>))
-    )(input);
+    using namespace std::string_view_literals;
+    static constexpr auto dimensionTag = "DIMENSION:"sv;
+    auto range = input | std::ranges::views::drop(utils::saturatedAdd(input.find(dimensionTag), dimensionTag.length()))
+                       | std::ranges::views::take_while([](auto character) {
+        return !std::isalpha(character);
+    });
+
+    const auto number = fp::token(fp::natural<size_t>)(std::string_view(&*range.begin(), std::ranges::distance(range)));
+
+    if (number.has_value())
+    {
+        return number->first;
+    }
+    else
+    {
+        return {};
+    }
 }
 
-auto getData(std::string_view input) -> fp::Result<Data>
+auto getDimension(std::string_view input) -> std::optional<size_t>
 {
-    return fp::sequence([](auto order, const auto& weights) { return Data {weights, order}; },
-                        tokenizedNatural<size_t>,
-                        tokenizedIntegers<int32_t>
-    )(input);
+    const auto number = fp::token(fp::natural<size_t>)(input);
+
+    if (number.has_value())
+    {
+        return number->first;
+    }
+    else
+    {
+        return {};
+    }
+}
+
+auto getTsplibWeights(std::string_view input) -> std::optional<std::vector<int32_t>>
+{
+    using namespace std::string_view_literals;
+    static constexpr auto edgeWeightSectionTag = "EDGE_WEIGHT_SECTION"sv;
+    auto range = input | std::ranges::views::drop(utils::saturatedAdd(input.find(edgeWeightSectionTag), edgeWeightSectionTag.length()))
+                       | std::ranges::views::take_while([](auto character) {
+        return !std::isalpha(character);
+    });
+
+    auto buffer = std::istringstream {std::string{std::string_view(&*range.begin(), std::ranges::distance(range))}};
+
+    const auto split = std::vector<std::string> {std::istream_iterator<std::string>{buffer},
+                                                 std::istream_iterator<std::string>{}};
+
+
+    if (split.empty())
+    {
+        return {};
+    }
+
+    return extractWeightsFromStrings(split);
+}
+
+auto getWeights(std::string_view input) -> std::optional<std::vector<int32_t>>
+{
+    auto buffer = std::istringstream {std::string{input}};
+    const auto split = std::vector<std::string> {std::istream_iterator<std::string>{buffer},
+                                                 std::istream_iterator<std::string>{}};
+    if (split.empty())
+    {
+        return {};
+    }
+
+    const auto weights = std::span{std::next(split.begin()), split.end()};
+    return extractWeightsFromStrings(weights);
+}
+
+auto extractWeightsFromStrings(std::span<const std::string> strings) -> std::optional<std::vector<int32_t>>
+{
+    auto result = std::vector<int32_t>{};
+    for (const auto& weight : strings)
+    {
+        const auto weightResult = fp::integer<int32_t>(weight);
+        if (!weightResult.has_value())
+        {
+            return {};
+        }
+        result.push_back(weightResult->first);
+    }
+    return result;
 }
 
 auto makeGraphFromFullMatrix(const std::vector<int32_t>& weights, size_t order) -> std::optional<tsplib::Graph>
@@ -73,17 +166,7 @@ auto getGraph(std::string_view input) -> std::optional<tsplib::Graph>
     {
         return {};
     }
-    return makeGraphFromFullMatrix(data->first.weights, data->first.order);
+    return makeGraphFromFullMatrix(data->weights, data->order);
 }
-
-#else
-
-auto getGraph([[maybe_unused]] std::string_view input) -> std::optional<tsplib::Graph>
-{
-    return {};
-}
-
-#endif
-
 
 }
