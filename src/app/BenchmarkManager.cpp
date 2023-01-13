@@ -14,7 +14,7 @@ auto qs::BenchmarkManager::menu() -> void
                                    "3. Testuj algorytm typu Dynamic Programming\n"
                                    "4. Testuj algorytm typu Branch and Bound (Low Cost)\n"
                                    "5. Testuj algorytm typu Branch and Bound (DFS)\n"
-                                   "6. Wróć"
+                                   "6. Wróć\n"
                                    "> ";
 
     while (true)

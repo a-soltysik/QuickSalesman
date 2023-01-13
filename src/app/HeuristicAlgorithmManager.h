@@ -14,12 +14,18 @@ public:
     auto menu() -> void override;
 
 private:
+    enum class NeighbourhoodGetter
+    {
+        SWAP,
+        SUBRANGE_REVERSE
+    };
+
     auto stopMenu() -> void;
     auto neighbourhoodMenu() -> void;
     auto checkParameters() -> bool;
 
     std::optional<std::chrono::seconds> time;
-    std::optional<algo::tsp::TspAlgorithm::NeighbourhoodGetter> getNeighbourhood;
+    std::optional<NeighbourhoodGetter> getNeighbourhood;
 };
 
 }

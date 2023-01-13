@@ -18,7 +18,7 @@ auto ExactAlgorithmManager::menu() -> void
                                    "4. Znajdź najkrótszą ścieżkę algorytmem typu Dynamic Programming\n"
                                    "5. Znajdź najkrótszą ścieżkę algorytmem typu Branch and Bound (Low Cost)\n"
                                    "6. Znajdź najkrótszą ścieżkę algorytmem typu Branch and Bound (DFS)\n"
-                                   "7. Wróć"
+                                   "7. Wróć\n"
                                    "> ";
 
     while (true)

@@ -17,6 +17,8 @@ set(${TEST_NAME}_SRC_LIST
     ${${PROJECT_NAME}_SRC_DIR}/algorithms/tsp/BruteForce.cpp
     ${${PROJECT_NAME}_SRC_DIR}/algorithms/tsp/DynamicProgramming.cpp
     ${${PROJECT_NAME}_SRC_DIR}/algorithms/utils/CombinationsGenerator.cpp
+    ${${PROJECT_NAME}_SRC_DIR}/algorithms/tsp/tabuSearch/VertexSwapper.cpp
+    ${${PROJECT_NAME}_SRC_DIR}/algorithms/tsp/tabuSearch/RangeReverser.cpp
     )
 
 set(${TEST_NAME}_SRC_LIST
@@ -24,6 +26,8 @@ set(${TEST_NAME}_SRC_LIST
     ${${TEST_NAME}_SRC_DIR}/main.cpp
     ${${TEST_NAME}_SRC_DIR}/algorithms/tsp/UtilsTest.cpp
     ${${TEST_NAME}_SRC_DIR}/algorithms/tsp/AlgorithmsTest.cpp
+    ${${TEST_NAME}_SRC_DIR}/algorithms/tsp/tabuSearch/VertexSwapperTest.cpp
+    ${${TEST_NAME}_SRC_DIR}/algorithms/tsp/tabuSearch/RangeReverserTest.cpp
     )
 
 add_executable(${TEST_NAME} ${${TEST_NAME}_SRC_LIST})

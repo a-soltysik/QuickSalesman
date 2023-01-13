@@ -10,17 +10,28 @@ namespace qs::algo::tsp
 class SimulatedAnnealing : public TspAlgorithm
 {
 public:
-    SimulatedAnnealing(NeighbourhoodGetter neighbourhoodGetter, BasicSolutionGetter basicSolutionGetter, std::chrono::seconds time);
+    using NeighbourGetter = TspResult::Path(&)(const TspResult::Path&);
+
+    SimulatedAnnealing(NeighbourGetter getNeighbour, BasicSolutionGetter getBasicSolution,
+                       std::chrono::seconds time);
     [[nodiscard]]
     auto solve(const tsplib::Graph& graph) -> Result override;
 
 private:
-    static auto getCostDifference(const TspResult::Path& state, const TspResult::Path& bestSolution, const tsplib::Graph& graph) -> int64_t;
     static auto getProbability(int64_t costDifference, double temperature) -> double;
+    auto getInitialTemperature(const tsplib::Graph& graph) -> double;
 
-    NeighbourhoodGetter  getNeighbours;
-    BasicSolutionGetter  getBasicSolution;
-    std::chrono::seconds time;
+    NeighbourGetter     getNeighbour;
+    BasicSolutionGetter getBasicSolution;
+    const std::chrono::seconds time;
 };
+
+namespace sa
+{
+
+auto randomRangeReverse(const TspResult::Path& state) -> TspResult::Path;
+auto randomSwap(const TspResult::Path& state) -> TspResult::Path;
+
+}
 
 }

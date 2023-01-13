@@ -2,6 +2,8 @@
 
 #include "algorithms/tsp/TabuSearch.h"
 #include "algorithms/tsp/SimulatedAnnealing.h"
+#include "algorithms/tsp/tabuSearch/VertexSwapper.h"
+#include "algorithms/tsp/tabuSearch/RangeReverser.h"
 
 namespace qs
 {
@@ -16,7 +18,7 @@ auto HeuristicAlgorithmManager::menu() -> void
                                    "4. Wybierz sąsiedztwo\n"
                                    "5. Znajdź najkrótszą ścieżkę algorytmem typu Tabu Search\n"
                                    "6. Znajdź najkrótszą ścieżkę algorytmem typu Simulated Annealing\n"
-                                   "7. Wróć"
+                                   "7. Wróć\n"
                                    "> ";
 
     while (true)
@@ -39,18 +41,35 @@ auto HeuristicAlgorithmManager::menu() -> void
         case 5:
             if (checkParameters())
             {
-                manageAlgorithm(algo::tsp::TabuSearch{getNeighbourhood.value(),
-                                                      algo::tsp::randomBasicSolution,
-                                                      100,
-                                                      time.value()});
+                if (getNeighbourhood == NeighbourhoodGetter::SWAP)
+                {
+                    manageAlgorithm(algo::tsp::TabuSearch<algo::tsp::ts::VertexSwapper>{algo::tsp::randomBasicSolution,
+                                                                                        time.value()});
+                }
+                else
+                {
+                    manageAlgorithm(algo::tsp::TabuSearch<algo::tsp::ts::RangeReverser>{algo::tsp::randomBasicSolution,
+                                                                                        time.value()});
+                }
+
             }
             break;
         case 6:
             if (checkParameters())
             {
-                manageAlgorithm(algo::tsp::SimulatedAnnealing{getNeighbourhood.value(),
-                                                              algo::tsp::randomBasicSolution,
-                                                              time.value()});
+                if (getNeighbourhood == NeighbourhoodGetter::SWAP)
+                {
+                    manageAlgorithm(algo::tsp::SimulatedAnnealing{algo::tsp::sa::randomSwap,
+                                                                  algo::tsp::randomBasicSolution,
+                                                                  time.value()});
+                }
+                else
+                {
+                    manageAlgorithm(algo::tsp::SimulatedAnnealing{algo::tsp::sa::randomRangeReverse,
+                                                                  algo::tsp::randomBasicSolution,
+                                                                  time.value()});
+                }
+
             }
             break;
         default:
@@ -78,17 +97,17 @@ auto HeuristicAlgorithmManager::neighbourhoodMenu() -> void
                                    "Wybierz sąsiedztwo:\n"
                                    "1. Losowa zamiana wierzchołków\n"
                                    "2. Losowe odwrócenie części ścieżki\n"
-                                   "3. Wróć"
+                                   "3. Wróć\n"
                                    "> ";
 
     const auto choice = utils::getChoiceFromMenu(MENU, 1, 3);
     switch (choice)
     {
     case 1:
-        getNeighbourhood = algo::tsp::randomSwap;
+        getNeighbourhood = NeighbourhoodGetter::SWAP;
         break;
     case 2:
-        getNeighbourhood = algo::tsp::randomRangeReverse;
+        getNeighbourhood = NeighbourhoodGetter::SUBRANGE_REVERSE;
         break;
     default:
         return;
